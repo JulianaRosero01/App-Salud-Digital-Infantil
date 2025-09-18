@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {  View,  Text,  TextInput,  TouchableOpacity,  Alert,  Image,  StyleSheet,  KeyboardAvoidingView,  Platform,  ScrollView,} from 'react-native';
 import { router } from 'expo-router';
-import { supabase } from '../lib/supabase';
 
 export default function Login() {
   const [correo, setCorreo] = useState('');
