@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "name": "Salud Digital Infantil",
+    "slug": "salud-digital-infantil",
+    "scheme": "miaplicacion",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "platforms": ["ios", "android", "web"],
+    "icon": "./assets/icono-inicio.png",
+    "backgroundColor": "#A3DFF0",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icono-inicio.png",
+        "backgroundColor": "#A3DFF0"
+      }
+    },
+    "web": {
+      "favicon": "./assets/icono-inicio.png"
+    }
+  }
+}
