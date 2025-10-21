@@ -46,21 +46,21 @@ export default function GestionarNinos() {
           </View>
 
           <TouchableOpacity style={styles.editButton}>
-            <Ionicons name="create-outline" size={18} color="#0057FF" />
+            <Ionicons name="create-outline" size={18} color="#00c3ffff" />
             <Text style={styles.editButtonText}>Editar</Text>
           </TouchableOpacity>
         </View>
 
         {/* Agregar otro niño */}
         <TouchableOpacity style={styles.addAnotherCard}>
-          <Ionicons name="add-circle-outline" size={30} color="#0057FF" />
+          <Ionicons name="add-circle-outline" size={30} color="#00c3ffff" />
           <Text style={styles.addAnotherText}>Agregar otro niño</Text>
           <Text style={styles.addAnotherSub}>Crea un perfil adicional para hermanos</Text>
         </TouchableOpacity>
 
         {/* Tips */}
         <View style={styles.tipsCard}>
-          <Ionicons name="information-circle-outline" size={20} color="#0057FF" />
+          <Ionicons name="information-circle-outline" size={20} color="#00c3ffff" />
           <View style={{ marginLeft: 10 }}>
             <Text style={styles.tipTitle}>Consejos para múltiples niños</Text>
             <Text style={styles.tipText}>• Cada niño mantiene su progreso individual</Text>
@@ -73,22 +73,22 @@ export default function GestionarNinos() {
       {/* Footer */}
       <View style={styles.footer}>
         <TouchableOpacity onPress={() => router.push("/home")}>
-          <Ionicons name="home-outline" size={24} color="#0057FF" />
+          <Ionicons name="home-outline" size={24} color="#00c3ffff" />
           <Text style={styles.footerText}>Inicio</Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => router.push("/notificaciones")}>
-          <Ionicons name="notifications-outline" size={24} color="#0057FF" />
+          <Ionicons name="notifications-outline" size={24} color="#00c3ffff" />
           <Text style={styles.footerText}>Notificaciones</Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => router.push("/perfil")}>
-          <Ionicons name="person-outline" size={24} color="#0057FF" />
+          <Ionicons name="person-outline" size={24} color="#00c3ffff" />
           <Text style={styles.footerText}>Perfil</Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => router.push("/menu")}>
-          <Ionicons name="menu-outline" size={24} color="#0057FF" />
+          <Ionicons name="menu-outline" size={24} color="#00c3ffff" />
           <Text style={styles.footerText}>Menú</Text>
         </TouchableOpacity>
       </View>
@@ -101,12 +101,12 @@ const styles = StyleSheet.create({
   scrollContent: { padding: 20, paddingBottom: 100 },
 
   header: { marginBottom: 20 },
-  headerTitle: { fontSize: 18, fontWeight: "bold", color: "#0057FF" },
+  headerTitle: { fontSize: 18, fontWeight: "bold", color: "#00c3ffff" },
   subTitle: { color: "#666", marginBottom: 10 },
   addButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#0057FF",
+    backgroundColor: "#00c3ffff",
     paddingHorizontal: 15,
     paddingVertical: 8,
     borderRadius: 20,
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   childHeader: { flexDirection: "row", justifyContent: "space-between", marginBottom: 5 },
   childName: { fontSize: 16, fontWeight: "bold", color: "#333" },
   activeTag: {
-    backgroundColor: "#0057FF",
+    backgroundColor: "#00c3ffff",
     color: "#fff",
     borderRadius: 10,
     paddingHorizontal: 8,
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
   tagsRow: { flexDirection: "row", flexWrap: "wrap", marginTop: 4 },
   tag: {
     backgroundColor: "#E6F0FF",
-    color: "#0057FF",
+    color: "#00c3ffff",
     paddingHorizontal: 10,
     borderRadius: 12,
     marginRight: 6,
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
   editButton: {
     flexDirection: "row",
     alignItems: "center",
-    borderColor: "#0057FF",
+    borderColor: "#00c3ffff",
     borderWidth: 1,
     borderRadius: 20,
     paddingVertical: 6,
@@ -161,18 +161,18 @@ const styles = StyleSheet.create({
     marginTop: 12,
     alignSelf: "flex-start",
   },
-  editButtonText: { color: "#0057FF", marginLeft: 5 },
+  editButtonText: { color: "#00c3ffff", marginLeft: 5 },
 
   addAnotherCard: {
     borderWidth: 1,
     borderStyle: "dashed",
-    borderColor: "#0057FF",
+    borderColor: "#00c3ffff",
     borderRadius: 15,
     padding: 20,
     alignItems: "center",
     marginBottom: 20,
   },
-  addAnotherText: { color: "#0057FF", fontWeight: "bold", marginTop: 10 },
+  addAnotherText: { color: "#00c3ffff", fontWeight: "bold", marginTop: 10 },
   addAnotherSub: { color: "#666", fontSize: 12, marginTop: 4, textAlign: "center" },
 
   tipsCard: {
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-start",
   },
-  tipTitle: { fontWeight: "bold", color: "#0057FF", marginBottom: 5 },
+  tipTitle: { fontWeight: "bold", color: "#00c3ffff", marginBottom: 5 },
   tipText: { fontSize: 12, color: "#444" },
 
   footer: {
@@ -194,5 +194,5 @@ const styles = StyleSheet.create({
     borderColor: "#eee",
     backgroundColor: "#fff",
   },
-  footerText: { fontSize: 12, color: "#0057FF", marginTop: 4, textAlign: "center" },
+  footerText: { fontSize: 12, color: "#00c3ffff", marginTop: 4, textAlign: "center" },
 });

@@ -47,9 +47,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#eee",
   },
-  headerTitle: { fontSize: 16, fontWeight: "bold", color: "#0057FF" },
+  headerTitle: { fontSize: 16, fontWeight: "bold", color: "#00c3ffff" },
   content: { padding: 15 },
-  sectionTitle: { fontSize: 16, fontWeight: "bold", marginBottom: 10, color: "#0057FF" },
+  sectionTitle: { fontSize: 16, fontWeight: "bold", marginBottom: 10, color: "#00c3ffff" },
   text: { fontSize: 14, color: "#444", marginBottom: 15 },
   card: {
     backgroundColor: "#E6F0FF",

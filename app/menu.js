@@ -15,22 +15,22 @@ export default function Menu() {
       {/* Grid de botones */}
       <View style={styles.grid}>
         <TouchableOpacity style={styles.card}>
-          <Ionicons name="phone-portrait-outline" size={40} color="#0057FF" />
+          <Ionicons name="phone-portrait-outline" size={40} color="#00c3ffff" />
           <Text style={styles.cardText}>Dispositivos</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.card}>
-          <Ionicons name="nutrition-outline" size={40} color="#0057FF" />
+          <Ionicons name="nutrition-outline" size={40} color="#00c3ffff" />
           <Text style={styles.cardText}>Alimentación</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.card}>
-          <Ionicons name="moon-outline" size={40} color="#0057FF" />
+          <Ionicons name="moon-outline" size={40} color="#00c3ffff" />
           <Text style={styles.cardText}>Sueño</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.card}>
-          <Ionicons name="fitness-outline" size={40} color="#0057FF" />
+          <Ionicons name="fitness-outline" size={40} color="#00c3ffff" />
           <Text style={styles.cardText}>Motricidad</Text>
         </TouchableOpacity>
       </View>
@@ -40,7 +40,7 @@ export default function Menu() {
         style={[styles.card, styles.fullWidthCard]}
         onPress={() => router.push("/gestionarNinos")}
       >
-        <Ionicons name="people-outline" size={40} color="#0057FF" />
+        <Ionicons name="people-outline" size={40} color="#00c3ffff" />
         <Text style={styles.cardText}>Gestionar Niños (1)</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#0057FF",
+    color: "#00c3ffff",
     marginBottom: 20,
   },
   grid: {
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 14,
     fontWeight: "600",
-    color: "#0057FF",
+    color: "#00c3ffff",
     textAlign: "center",
   },
 });

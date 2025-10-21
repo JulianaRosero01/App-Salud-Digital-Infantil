@@ -55,7 +55,7 @@ export default function Home() {
           style={styles.gridItem}
           onPress={() => router.push("/areas/sueno")}
         >
-          <Ionicons name="moon-outline" size={24} color="#0057FF" />
+          <Ionicons name="moon-outline" size={24} color="#00c3ffff" />
           <Text style={styles.gridText}>Sueño</Text>
         </TouchableOpacity>
 
@@ -63,7 +63,7 @@ export default function Home() {
           style={styles.gridItem}
           onPress={() => router.push("/areas/social")}
         >
-          <Ionicons name="people-outline" size={24} color="#0057FF" />
+          <Ionicons name="people-outline" size={24} color="#00c3ffff" />
           <Text style={styles.gridText}>Social</Text>
         </TouchableOpacity>
 
@@ -71,7 +71,7 @@ export default function Home() {
           style={styles.gridItem}
           onPress={() => router.push("/areas/alimentacion")}
         >
-          <Ionicons name="fast-food-outline" size={24} color="#0057FF" />
+          <Ionicons name="fast-food-outline" size={24} color="#00c3ffff" />
           <Text style={styles.gridText}>Alimentación</Text>
         </TouchableOpacity>
 
@@ -79,7 +79,7 @@ export default function Home() {
           style={styles.gridItem}
           onPress={() => router.push("/areas/aprendizaje")}
         >
-          <Ionicons name="book-outline" size={24} color="#0057FF" />
+          <Ionicons name="book-outline" size={24} color="#00c3ffff" />
           <Text style={styles.gridText}>Aprendizaje</Text>
         </TouchableOpacity>
 
@@ -87,7 +87,7 @@ export default function Home() {
           style={styles.gridItem}
           onPress={() => router.push("/areas/motricidad")}
         >
-          <Ionicons name="walk-outline" size={24} color="#0057FF" />
+          <Ionicons name="walk-outline" size={24} color="#00c3ffff" />
           <Text style={styles.gridText}>Motricidad</Text>
         </TouchableOpacity>
 
@@ -95,7 +95,7 @@ export default function Home() {
           style={styles.gridItem}
           onPress={() => router.push("/areas/dispositivos")}
         >
-          <Ionicons name="phone-portrait-outline" size={24} color="#0057FF" />
+          <Ionicons name="phone-portrait-outline" size={24} color="#00c3ffff" />
           <Text style={styles.gridText}>Dispositivos</Text>
         </TouchableOpacity>
       </View>
@@ -122,22 +122,22 @@ export default function Home() {
       {/* FOOTER */}
      <View style={styles.footer}>
   <TouchableOpacity onPress={() => router.push("/home")}>
-    <Ionicons name="home-outline" size={24} color="#0057FF" />
+    <Ionicons name="home-outline" size={24} color="#00c3ffff" />
     <Text style={styles.footerText}>Inicio</Text>
   </TouchableOpacity>
 
   <TouchableOpacity onPress={() => router.push("/notificaciones")}>
-    <Ionicons name="notifications-outline" size={24} color="#0057FF" />
+    <Ionicons name="notifications-outline" size={24} color="#00c3ffff" />
     <Text style={styles.footerText}>Notificaciones</Text>
   </TouchableOpacity>
 
   <TouchableOpacity onPress={() => router.push("/perfil")}>
-    <Ionicons name="person-outline" size={24} color="#0057FF" />
+    <Ionicons name="person-outline" size={24} color="#00c3ffff" />
     <Text style={styles.footerText}>Perfil</Text>
   </TouchableOpacity>
 
   <TouchableOpacity onPress={() => router.push("/menu")}>
-    <Ionicons name="menu-outline" size={24} color="#0057FF" />
+    <Ionicons name="menu-outline" size={24} color="#00c3ffff" />
     <Text style={styles.footerText}>Menú</Text>
   </TouchableOpacity>
 </View>
@@ -165,13 +165,13 @@ const styles = StyleSheet.create({
     padding: 15,
     marginBottom: 15,
   },
-  cardTitle: { fontSize: 16, fontWeight: "bold", color: "#0057FF" },
+  cardTitle: { fontSize: 16, fontWeight: "bold", color: "#00c3ffff" },
   cardSubtitle: { fontSize: 14, color: "#333", marginTop: 5 },
   reminder: { fontSize: 12, color: "#666", marginTop: 5 },
-  sectionTitle: { fontSize: 16, fontWeight: "bold", marginBottom: 10, color: "#0057FF" },
+  sectionTitle: { fontSize: 16, fontWeight: "bold", marginBottom: 10, color: "#00c3ffff" },
   progress: { fontSize: 13, color: "#444", marginBottom: 10 },
   smallButton: {
-    backgroundColor: "#0057FF",
+    backgroundColor: "#00c3ffff",
     padding: 8,
     borderRadius: 20,
     alignItems: "center",
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     alignItems: "center",
   },
-  gridText: { fontSize: 14, color: "#0057FF", marginTop: 5, fontWeight: "500" },
+  gridText: { fontSize: 14, color: "#00c3ffff", marginTop: 5, fontWeight: "500" },
   cardHighlight: {
     backgroundColor: "#FFFBE6",
     borderRadius: 12,
@@ -218,5 +218,5 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: "#eee",
   },
-  footerText: { fontSize: 12, color: "#0057FF", marginTop: 3, textAlign: "center" },
+  footerText: { fontSize: 12, color: "#00c3ffff", marginTop: 3, textAlign: "center" },
 });

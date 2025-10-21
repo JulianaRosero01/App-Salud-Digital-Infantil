@@ -12,7 +12,7 @@ export default function Welcome() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Logo */}
-      <Image source={require("../assets/icono-inicio.png")} style={styles.logo} />
+      <Image source={require("../assets/icono-inicio.png")}  style={styles.logo} />
 
       {/* Slogan */}
       <Text style={styles.subtitle}>
@@ -29,7 +29,7 @@ export default function Welcome() {
           loop
         >
           <View style={styles.banner}>
-            <Ionicons name="phone-portrait-outline" size={40} color="#fff" />
+            <Ionicons name="phone-portrait-outline" size={40} color="#2895b6ff" />
             <Text style={styles.bannerTitle}>Uso Responsable de Dispositivos</Text>
             <Text style={styles.bannerText}>
               Guías expertas para un uso saludable y balanceado de pantallas y tecnología
@@ -37,7 +37,7 @@ export default function Welcome() {
           </View>
 
           <View style={styles.banner}>
-            <Ionicons name="school-outline" size={40} color="#fff" />
+            <Ionicons name="school-outline" size={40} color="#2895b6ff" />
             <Text style={styles.bannerTitle}>Desarrollo Personalizado</Text>
             <Text style={styles.bannerText}>
               Actividades adaptadas a la edad y etapa de tu hijo
@@ -45,7 +45,7 @@ export default function Welcome() {
           </View>
 
           <View style={styles.banner}>
-            <Ionicons name="restaurant-outline" size={40} color="#fff" />
+            <Ionicons name="restaurant-outline" size={40} color="#2895b6ff" />
             <Text style={styles.bannerTitle}>Alimentación Inteligente</Text>
             <Text style={styles.bannerText}>
               Ideas y recomendaciones para una nutrición saludable
@@ -53,7 +53,7 @@ export default function Welcome() {
           </View>
 
           <View style={styles.banner}>
-            <Ionicons name="fitness-outline" size={40} color="#fff" />
+            <Ionicons name="fitness-outline" size={40} color="#2895b6ff" />
             <Text style={styles.bannerTitle}>Motricidad y Recreación</Text>
             <Text style={styles.bannerText}>
               Ejercicios y juegos para el desarrollo físico
@@ -92,14 +92,6 @@ export default function Welcome() {
         </Text>
       </View>
 
-      {/* ¿Por qué elegir? */}
-      <Text style={styles.sectionTitle}>¿Por qué elegir CreceFeliz?</Text>
-      <View style={styles.infoCard}>
-        <Text style={styles.infoItem}>✨ Contenido Personalizado</Text>
-        <Text style={styles.infoItem}>⏰ Recordatorios Inteligentes</Text>
-        <Text style={styles.infoItem}>📑 Basado en Evidencia</Text>
-        <Text style={styles.infoItem}>👨‍👩‍👧‍👦 Múltiples Niños</Text>
-      </View>
 
       {/* Ejemplo de consejos */}
       <Text style={styles.sectionTitle}>Ejemplo de Consejos Especializados</Text>
@@ -114,7 +106,7 @@ export default function Welcome() {
       </TouchableOpacity>
 
       {/* Card con gradiente */}
-      <LinearGradient colors={["#4A90E2", "#0057FF"]} style={styles.cardHighlight}>
+      <LinearGradient colors={["#51b3ddff", "#70aed8ff"]} style={styles.cardHighlight}>
         <Text style={styles.cardHighlightText}>¡Desbloquea Todo el Potencial!</Text>
         <Text style={styles.cardHighlightSub}>
           Para consejos personalizados, seguimiento de progreso y contenido específico para tu hijo,
@@ -145,7 +137,7 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 20,
-    backgroundColor: "#fff",
+    backgroundColor: "#ade9f5ff",
     alignItems: "center",
   },
   logo: {
@@ -159,7 +151,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: "center",
     marginBottom: 20,
-    color: "#444",
+    color: "#000000ff",
   },
   carouselWrapper: {
     height: 200,
@@ -168,46 +160,48 @@ const styles = StyleSheet.create({
   },
   banner: {
     flex: 1,
-    backgroundColor: "#0057FF",
+    backgroundColor: "#ffffffff",
     borderRadius: 15,
     padding: 25,
     marginHorizontal: 10,
     alignItems: "center",
     justifyContent: "center",
+    borderWidth: 3,
+    borderColor: "#51b3ddff",
   },
   bannerTitle: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#fff",
+    color: "#51b3ddff",
     marginTop: 10,
     marginBottom: 5,
     textAlign: "center",
   },
   bannerText: {
     fontSize: 13,
-    color: "#fff",
+    color: "#000000ff",
     textAlign: "center",
   },
   dot: {
-    backgroundColor: "rgba(0,0,0,.2)",
+    backgroundColor: "rgba(24, 153, 185, 0.37)",
     width: 8,
     height: 8,
     borderRadius: 4,
     margin: 3,
   },
   activeDot: {
-    backgroundColor: "#fff",
+    backgroundColor: "#2895b6ff",
     width: 10,
     height: 10,
     borderRadius: 5,
     margin: 3,
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "bold",
     marginTop: 15,
     marginBottom: 10,
-    color: "#0057FF",
+    color: "#000000ff",
     textAlign: "center",
   },
   sectionSubtitle: {
@@ -217,53 +211,58 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   ageCard: {
-    backgroundColor: "#F2F7FF",
+    backgroundColor: "#ffffffff",
     borderRadius: 12,
     padding: 15,
     marginBottom: 15,
     width: "100%",
+    borderWidth: 3,
+    borderColor: "#51b3ddff",
   },
   ageTitle: {
     fontWeight: "bold",
     fontSize: 14,
-    color: "#000",
+    color: "#51b3ddff",
   },
   ageText: {
-    fontSize: 12,
-    color: "#444",
+    fontSize: 14,
+    color: "#000000ff",
     marginTop: 5,
   },
   infoCard: {
-    backgroundColor: "#fff",
+    backgroundColor: "#ffffffff",
     borderRadius: 12,
     padding: 15,
     marginBottom: 15,
     width: "100%",
-    borderWidth: 1,
-    borderColor: "#E6E6E6",
+    borderWidth: 3,
+    borderColor: "#51b3ddff",
   },
   infoItem: {
     fontSize: 13,
-    color: "#333",
+    color: "#000000ff",
     marginBottom: 5,
   },
   smallButton: {
-    backgroundColor: "#E6F0FF",
+    backgroundColor: "#51b3ddff",
     borderRadius: 20,
     paddingVertical: 8,
     paddingHorizontal: 20,
     marginBottom: 20,
   },
   smallButtonText: {
-    color: "#0057FF",
+    color: "#ffffffff",
     fontSize: 12,
+     fontWeight: "bold",
   },
   cardHighlight: {
-    borderRadius: 15,
+    borderRadius: 20,
     padding: 20,
     marginBottom: 20,
     width: "100%",
     alignItems: "center",
+    borderWidth: 3,
+    borderColor: "#ffffffff",
   },
   cardHighlightText: {
     fontSize: 16,
@@ -287,28 +286,35 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   primaryButtonText: {
-    color: "#0057FF",
+    color: "#1c5e7aff",
     fontWeight: "bold",
-    fontSize: 14,
+    fontSize: 16,
   },
   secondaryButton: {
     marginTop: 12,
     paddingVertical: 10,
     borderRadius: 25,
-    borderWidth: 1,
-    borderColor: "#0057FF",
+    borderWidth: 3,
+    borderColor: "#51b3ddad",
     width: "100%",
     alignItems: "center",
+    backgroundColor: "#ffffff",
   },
   secondaryButtonText: {
-    color: "#0057FF",
-    fontSize: 14,
+    color: "#1c5e7aff",
+    fontSize: 16,
+    fontWeight: "bold",
   },
   footer: {
     fontSize: 11,
-    color: "#777",
+    color: "#51b3ddff",
     marginTop: 20,
     textAlign: "center",
     marginBottom: 40,
+  },
+  logo: {
+    width: 200,   // ancho
+    height: 200,  // alto
+    resizeMode: 'contain', 
   },
 });
