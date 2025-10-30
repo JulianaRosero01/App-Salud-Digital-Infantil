@@ -84,7 +84,7 @@ export default function ProfileSteps() {
                 ]}
                 onPress={() => setFormData({ ...formData, edad: "0-2" })}
               >
-                <Ionicons name="baby-outline" size={20} color="#0057FF" />
+                <Ionicons name="baby-outline" size={20} color="#51b3ddff" />
                 <Text style={styles.optionText}>0-2 años • Bebé</Text>
               </TouchableOpacity>
 
@@ -95,7 +95,7 @@ export default function ProfileSteps() {
                 ]}
                 onPress={() => setFormData({ ...formData, edad: "3-5" })}
               >
-                <Ionicons name="heart-outline" size={20} color="#0057FF" />
+                <Ionicons name="heart-outline" size={20} color="#51b3ddff" />
                 <Text style={styles.optionText}>3-5 años • Preescolar</Text>
               </TouchableOpacity>
 
@@ -106,7 +106,7 @@ export default function ProfileSteps() {
                 ]}
                 onPress={() => setFormData({ ...formData, edad: "6-8" })}
               >
-                <Ionicons name="school-outline" size={20} color="#0057FF" />
+                <Ionicons name="school-outline" size={20} color="#51b3ddff" />
                 <Text style={styles.optionText}>6-8 años • Escolar</Text>
               </TouchableOpacity>
             </View>
@@ -333,7 +333,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#0057FF",
+    color: "#2895b6ff",
     marginBottom: 5,
     textAlign: "center",
   },
@@ -368,13 +368,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#F9FCFF",
   },
   optionSelected: {
-    borderColor: "#0057FF",
+    borderColor: "#2895b6ff",
     backgroundColor: "#E6F0FF",
   },
   optionText: {
     marginLeft: 10,
     fontSize: 14,
-    color: "#333",
+    color: "#000000ff",
   },
   genderRow: {
     flexDirection: "row",
@@ -383,16 +383,16 @@ const styles = StyleSheet.create({
   },
   genderButton: {
     borderWidth: 1,
-    borderColor: "#0057FF",
+    borderColor: "#2895b6ff",
     borderRadius: 20,
     paddingVertical: 8,
     paddingHorizontal: 15,
   },
   genderSelected: {
-    backgroundColor: "#0057FF",
+    backgroundColor: "#2895b6ff",
   },
   genderText: {
-    color: "#0057FF",
+    color: "#2895b6ff",
     fontSize: 14,
   },
   progressBar: {
@@ -413,7 +413,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   circleActive: {
-    backgroundColor: "#0057FF",
+    backgroundColor: "#2895b6ff",
   },
   circleInactive: {
     backgroundColor: "#ccc",
@@ -427,7 +427,7 @@ const styles = StyleSheet.create({
     width: 30,
   },
   lineActive: {
-    backgroundColor: "#0057FF",
+    backgroundColor: "#2895b6ff",
   },
   lineInactive: {
     backgroundColor: "#ccc",
@@ -442,16 +442,16 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 25,
     borderWidth: 1,
-    borderColor: "#0057FF",
+    borderColor: "#2895b6ff",
     minWidth: 120,
     alignItems: "center",
   },
   backText: {
-    color: "#0057FF",
+    color: "#2895b6ff",
     fontWeight: "bold",
   },
   nextButton: {
-    backgroundColor: "#0057FF",
+    backgroundColor: "#2895b6ff",
     padding: 12,
     borderRadius: 25,
     minWidth: 120,
@@ -462,7 +462,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   finishButton: {
-    backgroundColor: "#28A745",
+    backgroundColor: "#41a157ff",
     padding: 12,
     borderRadius: 25,
     minWidth: 120,

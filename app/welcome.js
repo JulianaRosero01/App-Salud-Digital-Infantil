@@ -16,7 +16,7 @@ export default function Welcome() {
 
       {/* Slogan */}
       <Text style={styles.subtitle}>
-        Tu compañero inteligente para criar niños felices y saludables
+        Tu compañero inteligente para formar niños felices y saludables
       </Text>
 
       {/* Carrusel de banners */}
@@ -30,7 +30,7 @@ export default function Welcome() {
         >
           <View style={styles.banner}>
             <Ionicons name="phone-portrait-outline" size={40} color="#2895b6ff" />
-            <Text style={styles.bannerTitle}>Uso Responsable de Dispositivos</Text>
+            <Text style={styles.bannerTitle}>Uso Responsable de dispositivos</Text>
             <Text style={styles.bannerText}>
               Guías expertas para un uso saludable y balanceado de pantallas y tecnología
             </Text>
@@ -63,7 +63,7 @@ export default function Welcome() {
       </View>
 
       {/* Contenido por edades */}
-      <Text style={styles.sectionTitle}>Contenido Especializado por Edades</Text>
+      <Text style={styles.sectionTitle}>Contenido especializado por edades</Text>
       <Text style={styles.sectionSubtitle}>
         Cada etapa tiene sus propios desafíos y momentos mágicos
       </Text>
