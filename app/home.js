@@ -2,6 +2,8 @@ import React from "react";
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
+
 
 
 export default function Home() {
@@ -10,12 +12,12 @@ export default function Home() {
     <View style={styles.container}>
       {/* HEADER */}
       <View style={styles.header}>
-        <Ionicons name="happy-outline" size={30} color="#0057FF" />
+        <Ionicons name="happy-outline" size={30} color="#1c5e7aff" />
         <View style={styles.profileBox}>
           <Text style={styles.profileName}>Juliana Rosero</Text>
           <Text style={styles.profileAge}>3-5 años</Text>
         </View>
-        <Ionicons name="notifications-outline" size={28} color="#0057FF" />
+        <Ionicons name="notifications-outline" size={28} color="#1c5e7aff" />
       </View>
 
       {/* SCROLL CENTRAL */}
@@ -24,19 +26,32 @@ export default function Home() {
         <View style={styles.card}>
           <Text style={styles.cardTitle}>¡Buenas tardes!</Text>
           <Text style={styles.cardSubtitle}>
-            Un momento especial para Juliana Rosero
+            Es momento especial para Juliana Rosero
           </Text>
           <Text style={styles.reminder}>⏰ Recomendación a las 09:00</Text>
         </View>
 
         {/* Progreso */}
-        <View style={styles.card}>
-          <Text style={styles.sectionTitle}>Progreso de Juliana Rosero</Text>
-          <Text style={styles.progress}>0/30 actividades completadas</Text>
-          <TouchableOpacity style={styles.smallButton}>
-            <Text style={styles.smallButtonText}>¡Comienza la primera actividad!</Text>
-          </TouchableOpacity>
-        </View>
+<View style={styles.card}>
+  <View style={styles.progressHeader}>
+    <Ionicons name="trending-up-outline" size={22} color="#51b3ddff" />
+    <View>
+      <Text style={styles.sectionTitle}>Progreso de Juliana Rosero</Text>
+      <Text style={styles.progressSubtitle}>Actividades completadas</Text>
+    </View>
+    <Text style={styles.progressNumber}>0/30</Text>
+  </View>
+
+  {/* Barra de progreso */}
+  <View style={styles.progressBarContainer}>
+    <View style={[styles.progressBarFill, { width: "0%" }]} />
+  </View>
+
+  <TouchableOpacity style={styles.smallButton}>
+    <Text style={styles.smallButtonText}>¡Comienza la primera actividad!</Text>
+  </TouchableOpacity>
+</View>
+
 
         {/* Insights */}
         <View style={styles.insightsCard}>
@@ -51,11 +66,12 @@ export default function Home() {
       {/* ...otros bloques */}
 
       <View style={styles.grid}>
+        
         <TouchableOpacity
           style={styles.gridItem}
           onPress={() => router.push("/areas/sueno")}
         >
-          <Ionicons name="moon-outline" size={24} color="#00c3ffff" />
+          <Ionicons name="moon-outline" size={24} color="#ffffffff" />
           <Text style={styles.gridText}>Sueño</Text>
         </TouchableOpacity>
 
@@ -63,7 +79,7 @@ export default function Home() {
           style={styles.gridItem}
           onPress={() => router.push("/areas/social")}
         >
-          <Ionicons name="people-outline" size={24} color="#00c3ffff" />
+          <Ionicons name="people-outline" size={24} color="#ffffffff" />
           <Text style={styles.gridText}>Social</Text>
         </TouchableOpacity>
 
@@ -71,7 +87,7 @@ export default function Home() {
           style={styles.gridItem}
           onPress={() => router.push("/areas/alimentacion")}
         >
-          <Ionicons name="fast-food-outline" size={24} color="#00c3ffff" />
+          <Ionicons name="fast-food-outline" size={24} color="#ffffffff" />
           <Text style={styles.gridText}>Alimentación</Text>
         </TouchableOpacity>
 
@@ -79,7 +95,7 @@ export default function Home() {
           style={styles.gridItem}
           onPress={() => router.push("/areas/aprendizaje")}
         >
-          <Ionicons name="book-outline" size={24} color="#00c3ffff" />
+          <Ionicons name="book-outline" size={24} color="#ffffffff" />
           <Text style={styles.gridText}>Aprendizaje</Text>
         </TouchableOpacity>
 
@@ -87,7 +103,7 @@ export default function Home() {
           style={styles.gridItem}
           onPress={() => router.push("/areas/motricidad")}
         >
-          <Ionicons name="walk-outline" size={24} color="#00c3ffff" />
+          <Ionicons name="walk-outline" size={24} color="#ffffffff" />
           <Text style={styles.gridText}>Motricidad</Text>
         </TouchableOpacity>
 
@@ -95,7 +111,7 @@ export default function Home() {
           style={styles.gridItem}
           onPress={() => router.push("/areas/dispositivos")}
         >
-          <Ionicons name="phone-portrait-outline" size={24} color="#00c3ffff" />
+          <Ionicons name="phone-portrait-outline" size={24} color="#ffffffff" />
           <Text style={styles.gridText}>Dispositivos</Text>
         </TouchableOpacity>
       </View>
@@ -122,22 +138,22 @@ export default function Home() {
       {/* FOOTER */}
      <View style={styles.footer}>
   <TouchableOpacity onPress={() => router.push("/home")}>
-    <Ionicons name="home-outline" size={24} color="#00c3ffff" />
+    <Ionicons name="home-outline" size={24} color="#1c5e7aff" />
     <Text style={styles.footerText}>Inicio</Text>
   </TouchableOpacity>
 
   <TouchableOpacity onPress={() => router.push("/notificaciones")}>
-    <Ionicons name="notifications-outline" size={24} color="#00c3ffff" />
+    <Ionicons name="notifications-outline" size={24} color="#1c5e7aff" />
     <Text style={styles.footerText}>Notificaciones</Text>
   </TouchableOpacity>
 
   <TouchableOpacity onPress={() => router.push("/perfil")}>
-    <Ionicons name="person-outline" size={24} color="#00c3ffff" />
+    <Ionicons name="person-outline" size={24} color="#1c5e7aff" />
     <Text style={styles.footerText}>Perfil</Text>
   </TouchableOpacity>
 
   <TouchableOpacity onPress={() => router.push("/menu")}>
-    <Ionicons name="menu-outline" size={24} color="#00c3ffff" />
+    <Ionicons name="menu-outline" size={24} color="#1c5e7aff" />
     <Text style={styles.footerText}>Menú</Text>
   </TouchableOpacity>
 </View>
@@ -146,7 +162,10 @@ export default function Home() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff" },
+  container: { 
+    flex: 1, 
+    backgroundColor: "#bde4eeff"
+   },
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -156,56 +175,102 @@ const styles = StyleSheet.create({
     borderBottomColor: "#eee",
   },
   profileBox: { alignItems: "center" },
-  profileName: { fontWeight: "bold", fontSize: 14, color: "#333" },
-  profileAge: { fontSize: 12, color: "#666" },
+  profileName: { fontWeight: "bold", fontSize: 14, color: "#000000ff" },
+  profileAge: { fontSize: 12, color: "#5a5858ff" },
   scrollContent: { padding: 15, paddingBottom: 100 },
   card: {
-    backgroundColor: "#F2F7FF",
+    backgroundColor: "#ffffffff",
     borderRadius: 12,
     padding: 15,
     marginBottom: 15,
   },
-  cardTitle: { fontSize: 16, fontWeight: "bold", color: "#00c3ffff" },
-  cardSubtitle: { fontSize: 14, color: "#333", marginTop: 5 },
-  reminder: { fontSize: 12, color: "#666", marginTop: 5 },
-  sectionTitle: { fontSize: 16, fontWeight: "bold", marginBottom: 10, color: "#00c3ffff" },
-  progress: { fontSize: 13, color: "#444", marginBottom: 10 },
+  cardTitle: { 
+    fontSize: 16,
+    fontWeight: "bold", 
+    color: "#1c5e7aff" },
+  cardSubtitle: { 
+    fontSize: 14, 
+    color: "#000000ff", 
+    marginTop: 5 
+  },
+  reminder: { 
+    fontSize: 12,
+     color: "#504d4dff", 
+     marginTop: 5 
+    },
+  sectionTitle: { 
+    fontSize: 16, 
+    fontWeight: "bold", 
+    marginBottom: 10, 
+    color: "#1c5e7aff" },
+  progress: { 
+    fontSize: 13, 
+    color: "#504d4dff", 
+    marginBottom: 10 },
   smallButton: {
-    backgroundColor: "#00c3ffff",
+    backgroundColor: "#51b3ddff",
     padding: 8,
     borderRadius: 20,
     alignItems: "center",
   },
-  smallButtonText: { color: "#fff", fontSize: 12 },
+  smallButtonText: { 
+    color: "#fff", 
+    fontSize: 13,
+    fontWeight: "bold" 
+  },
   insightsCard: {
-    backgroundColor: "#E6F0FF",
+    backgroundColor: "#ffffffff",
     borderRadius: 12,
     padding: 15,
     marginBottom: 15,
   },
-  insightItem: { fontSize: 13, color: "#333", marginTop: 5 },
+  insightItem: { 
+    fontSize: 13, 
+    color: "#333", 
+    marginTop: 5 },
   grid: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    marginBottom: 20,
+    margintop: 0,
+    marginBottom: -70,
+    
+  
   },
   gridItem: {
     width: "47%",
-    backgroundColor: "#F2F7FF",
+    backgroundColor: "#51b3ddff",
     padding: 15,
     borderRadius: 12,
     marginBottom: 15,
     alignItems: "center",
+    borderWidth: 3,
+    borderColor: "#ffffffff",
+    //sombra 
+  shadowColor: "#000",
+  shadowOffset: { width: 0, height: 4 },
+  shadowOpacity: 0.3,
+  shadowRadius: 4,
+  elevation: 6, // para Android
+
+  
+    
   },
-  gridText: { fontSize: 14, color: "#00c3ffff", marginTop: 5, fontWeight: "500" },
+  gridText: { 
+    fontSize: 14, color: "#ffffffff", 
+    marginTop: 5, 
+    fontWeight: "500" 
+  },
   cardHighlight: {
-    backgroundColor: "#FFFBE6",
+    backgroundColor: "#ffffffff",
     borderRadius: 12,
     padding: 15,
     marginBottom: 15,
   },
-  recoText: { fontSize: 13, color: "#333" },
+  recoText: { 
+    fontSize: 13, 
+    color: "#333" 
+  },
   footer: {
     position: "absolute",
     bottom: 0,
@@ -218,5 +283,40 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: "#eee",
   },
-  footerText: { fontSize: 12, color: "#00c3ffff", marginTop: 3, textAlign: "center" },
+  footerText: {
+     fontSize: 12, 
+     color: "#1c5e7aff", 
+     marginTop: 3, 
+     textAlign: "center"
+     },
+     progressHeader: {
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "space-between",
+  marginBottom: 15,
+  marginLeft: 8,
+  marginRight: 55,
+},
+progressSubtitle: {
+  fontSize: 12,
+  color: "#666",
+},
+progressNumber: {
+  fontSize: 13,
+  fontWeight: "bold",
+  color: "#1c5e7aff",
+},
+progressBarContainer: {
+  height: 8,
+  backgroundColor: "#e1f1ff",
+  borderRadius: 10,
+  overflow: "hidden",
+  marginBottom: 12,
+},
+progressBarFill: {
+  height: "100%",
+  backgroundColor: "#51b3ddff",
+  borderRadius: 10,
+},
+
 });
