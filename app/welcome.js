@@ -168,6 +168,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderWidth: 3,
     borderColor: "#51b3ddff",
+    elevation: 8,
   },
   bannerTitle: {
     fontSize: 16,
@@ -218,6 +219,8 @@ const styles = StyleSheet.create({
     width: "100%",
     borderWidth: 3,
     borderColor: "#51b3ddff",
+    
+    elevation: 15,
   },
   ageTitle: {
     fontWeight: "bold",
@@ -237,6 +240,8 @@ const styles = StyleSheet.create({
     width: "100%",
     borderWidth: 3,
     borderColor: "#51b3ddff",
+    
+    elevation: 15,
   },
   infoItem: {
     fontSize: 13,
@@ -249,6 +254,8 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 20,
     marginBottom: 20,
+    
+    elevation: 8,
   },
   smallButtonText: {
     color: "#ffffffff",
@@ -263,6 +270,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 3,
     borderColor: "#ffffffff",
+    
+    elevation: 15,
   },
   cardHighlightText: {
     fontSize: 16,
@@ -311,10 +320,14 @@ const styles = StyleSheet.create({
     marginTop: 20,
     textAlign: "center",
     marginBottom: 40,
+    
+    elevation: 15,
   },
   logo: {
     width: 200,   // ancho
     height: 200,  // alto
     resizeMode: 'contain', 
+    
+    elevation: 15,
   },
 });

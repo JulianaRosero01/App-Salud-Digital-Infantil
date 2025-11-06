@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-  ScrollView,
+import {  View,  Text,  StyleSheet,  TouchableOpacity,  TextInput,  ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
@@ -14,7 +8,7 @@ import { useRouter } from "expo-router";
 export default function ProfileSteps() {
   const [step, setStep] = useState(0);
   const [formData, setFormData] = useState({
-    nombre: "",
+    nombre: "",    
     edad: "",
     genero: "",
     intereses: [],
