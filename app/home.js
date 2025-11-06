@@ -1,34 +1,125 @@
-import React from "react";
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from "react-native";
+// app/home.js
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter, useLocalSearchParams } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Home() {
   const router = useRouter();
-  const { nombre } = useLocalSearchParams(); // simula el nombre del niño que llega
+  const { nombre } = useLocalSearchParams(); // por si vienes con ?nombre=...
+  const [children, setChildren] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeChild, setActiveChild] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // cargar niños y niño activo
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const json = await AsyncStorage.getItem("children");
+        const savedIndex = await AsyncStorage.getItem("activeChildIndex");
+
+        const list = json ? JSON.parse(json) : [];
+        setChildren(list);
+
+        const idx = savedIndex ? Number(savedIndex) : 0;
+        setActiveIndex(idx);
+        setActiveChild(list[idx] || null);
+      } catch (error) {
+        console.log("Error cargando home:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
+
+  // para decidir si mostramos un área según lo que marcó en "enfoque"
+  const hasFocus = (areaName) => {
+    if (!activeChild) return true; // si no hay niño, muestra todo
+    const enfoque = activeChild.enfoque || [];
+    if (enfoque.length === 0) return true; // si no eligió nada, muestra todo
+    // nombres según lo que guardaste en profilesteps
+    return enfoque.includes(areaName);
+  };
+
+  // para mostrar texto de insights según edad
+  const getEdadTexto = () => {
+    if (!activeChild || !activeChild.edad) return "su edad";
+    if (activeChild.edad === "0-2") return "0-2 años";
+    if (activeChild.edad === "3-5") return "3-5 años";
+    if (activeChild.edad === "6-8") return "6-8 años";
+    return activeChild.edad;
+  };
+
+  const nombreMostrado =
+    (activeChild && activeChild.nombre) || nombre || "tu niño";
 
   return (
     <View style={styles.container}>
       {/* HEADER */}
       <View style={styles.header}>
-        
-         <Image source={require("../assets/icono-inicio.png")} style={styles.logo} resizeMode="contain"/>
-        
-        <View style={styles.profileBox}>
+        <Image
+          source={require("../assets/icono-inicio.png")}
+          style={styles.logo}
+          resizeMode="contain"
+        />
 
+        <View style={styles.profileBox}>
           <Text style={styles.title}>Inicio</Text>
         </View>
+
         <TouchableOpacity onPress={() => router.push("/configuracion")}>
           <Ionicons name="settings-outline" size={26} color="#1c5e7aff" />
         </TouchableOpacity>
       </View>
-      
+
+      {/* SELECTOR DE NIÑOS (si hay más de 1) */}
+      {!loading && children.length > 0 && (
+        <ScrollView
+          horizontal
+          style={{ paddingHorizontal: 15, marginTop: 10 }}
+          showsHorizontalScrollIndicator={false}
+        >
+          {children.map((c, i) => (
+            <TouchableOpacity
+              key={i}
+              style={[
+                styles.childChip,
+                i === activeIndex && styles.childChipActive,
+              ]}
+              onPress={async () => {
+                setActiveIndex(i);
+                setActiveChild(children[i]);
+                await AsyncStorage.setItem("activeChildIndex", String(i));
+              }}
+            >
+              <Text
+                style={[
+                  styles.childChipText,
+                  i === activeIndex && { color: "#fff" },
+                ]}
+              >
+                {c.nombre || `Niño ${i + 1}`}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      )}
 
       {/* SCROLL CENTRAL */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Saludo */}
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>¡Hola {nombre}!</Text>
+          <Text style={styles.cardTitle}>¡Hola {nombreMostrado}!</Text>
           <Text style={styles.cardSubtitle}>
             Bienvenido a tu espacio digital saludable.
           </Text>
@@ -39,8 +130,12 @@ export default function Home() {
           <View style={styles.progressHeader}>
             <Ionicons name="trending-up-outline" size={22} color="#51b3ddff" />
             <View>
-              <Text style={styles.sectionTitle}>Progreso de {nombre}</Text>
-              <Text style={styles.progressSubtitle}>Actividades completadas</Text>
+              <Text style={styles.sectionTitle}>
+                Progreso de {nombreMostrado}
+              </Text>
+              <Text style={styles.progressSubtitle}>
+                Actividades completadas
+              </Text>
             </View>
             <Text style={styles.progressNumber}>0/30</Text>
           </View>
@@ -50,46 +145,85 @@ export default function Home() {
           </View>
 
           <TouchableOpacity style={styles.smallButton}>
-            <Text style={styles.smallButtonText}>¡Comienza la primera actividad!</Text>
+            <Text style={styles.smallButtonText}>
+              ¡Comienza la primera actividad!
+            </Text>
           </TouchableOpacity>
         </View>
 
-        {/* Insights */}
+        {/* Insights según edad */}
         <View style={styles.insightsCard}>
-          <Text style={styles.sectionTitle}>Insights para 0-2 años</Text>
-          <Text style={styles.insightItem}>🧠 Desarrollo Cognitivo: Aprende con juegos de memoria</Text>
-          <Text style={styles.insightItem}>🎨 Habilidades Sociales: Interacciones con otros niños</Text>
-          <Text style={styles.insightItem}>🏃 Desarrollo Motor: Juegos de coordinación</Text>
+          <Text style={styles.sectionTitle}>
+            Insights para {getEdadTexto()}
+          </Text>
+          <Text style={styles.insightItem}>
+            🧠 Desarrollo Cognitivo: Aprende con juegos de memoria
+          </Text>
+          <Text style={styles.insightItem}>
+            🎨 Habilidades Sociales: Interacciones con otros niños
+          </Text>
+          <Text style={styles.insightItem}>
+            🏃 Desarrollo Motor: Juegos de coordinación
+          </Text>
         </View>
 
-        {/* Áreas prioritarias */}
+        {/* Áreas prioritarias filtradas por enfoque */}
         <View style={styles.grid}>
-          <TouchableOpacity style={styles.gridItem} onPress={() => router.push("/areas/sueno")}>
-            <Ionicons name="moon-outline" size={24} color="#fff" />
-            <Text style={styles.gridText}>Sueño</Text>
-          </TouchableOpacity>
+          {hasFocus("Sueño") && (
+            <TouchableOpacity
+              style={styles.gridItem}
+              onPress={() => router.push("/areas/sueno")}
+            >
+              <Ionicons name="moon-outline" size={24} color="#fff" />
+              <Text style={styles.gridText}>Sueño</Text>
+            </TouchableOpacity>
+          )}
 
-          <TouchableOpacity style={styles.gridItem} onPress={() => router.push("/areas/social")}>
-            <Ionicons name="people-outline" size={24} color="#fff" />
-            <Text style={styles.gridText}>Social</Text>
-          </TouchableOpacity>
+          {hasFocus("Social") && (
+            <TouchableOpacity
+              style={styles.gridItem}
+              onPress={() => router.push("/areas/social")}
+            >
+              <Ionicons name="people-outline" size={24} color="#fff" />
+              <Text style={styles.gridText}>Social</Text>
+            </TouchableOpacity>
+          )}
 
-          <TouchableOpacity style={styles.gridItem} onPress={() => router.push("/areas/alimentacion")}>
-            <Ionicons name="fast-food-outline" size={24} color="#fff" />
-            <Text style={styles.gridText}>Alimentación</Text>
-          </TouchableOpacity>
+          {hasFocus("Alimentación") && (
+            <TouchableOpacity
+              style={styles.gridItem}
+              onPress={() => router.push("/areas/alimentacion")}
+            >
+              <Ionicons name="fast-food-outline" size={24} color="#fff" />
+              <Text style={styles.gridText}>Alimentación</Text>
+            </TouchableOpacity>
+          )}
 
-          <TouchableOpacity style={styles.gridItem} onPress={() => router.push("/areas/aprendizaje")}>
-            <Ionicons name="book-outline" size={24} color="#fff" />
-            <Text style={styles.gridText}>Aprendizaje</Text>
-          </TouchableOpacity>
+          {hasFocus("Aprendizaje") && (
+            <TouchableOpacity
+              style={styles.gridItem}
+              onPress={() => router.push("/areas/aprendizaje")}
+            >
+              <Ionicons name="book-outline" size={24} color="#fff" />
+              <Text style={styles.gridText}>Aprendizaje</Text>
+            </TouchableOpacity>
+          )}
 
-          <TouchableOpacity style={styles.gridItem} onPress={() => router.push("/areas/motricidad")}>
-            <Ionicons name="walk-outline" size={24} color="#fff" />
-            <Text style={styles.gridText}>Motricidad</Text>
-          </TouchableOpacity>
+          {hasFocus("Motricidad") && (
+            <TouchableOpacity
+              style={styles.gridItem}
+              onPress={() => router.push("/areas/motricidad")}
+            >
+              <Ionicons name="walk-outline" size={24} color="#fff" />
+              <Text style={styles.gridText}>Motricidad</Text>
+            </TouchableOpacity>
+          )}
 
-          <TouchableOpacity style={styles.gridItem} onPress={() => router.push("/areas/dispositivos")}>
+          {/* esta no estaba en el registro, la dejamos siempre */}
+          <TouchableOpacity
+            style={styles.gridItem}
+            onPress={() => router.push("/areas/dispositivos")}
+          >
             <Ionicons name="phone-portrait-outline" size={24} color="#fff" />
             <Text style={styles.gridText}>Dispositivos</Text>
           </TouchableOpacity>
@@ -99,8 +233,8 @@ export default function Home() {
         <View style={styles.cardHighlight}>
           <Text style={styles.sectionTitle}>Recomendaciones Personalizadas</Text>
           <Text style={styles.recoText}>
-            Para {nombre || "Juliana Rosero"}: Basado en sus gustos por arte y juegos,
-            te recomendamos actividades creativas.
+            Para {nombreMostrado}: según su registro te mostramos estas áreas
+            primero.
           </Text>
         </View>
 
@@ -108,7 +242,8 @@ export default function Home() {
         <View style={styles.insightsCard}>
           <Text style={styles.sectionTitle}>Consejo Experto del Día</Text>
           <Text style={styles.insightItem}>
-            📖 La lectura diaria, aunque sea por 10 minutos, fortalece el vínculo emocional.
+            📖 La lectura diaria, aunque sea por 10 minutos, fortalece el vínculo
+            emocional.
           </Text>
         </View>
       </ScrollView>
@@ -149,56 +284,47 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     borderBottomWidth: 1,
     borderBottomColor: "#eee",
-    paddingEnd:39,
-    paddingBottom:-120,
+    paddingEnd: 39,
+    paddingBottom: -120,
   },
   logo: {
     width: 70,
     height: 80,
     resizeMode: "contain",
   },
-  profileBox: { 
-    alignItems: "center"
-   },
-  profileName: { 
-    fontWeight: "bold", 
-    fontSize: 14, 
-    color: "#000"
-   },
+  profileBox: {
+    alignItems: "center",
+  },
   scrollContent: {
-     padding: 15, 
-     paddingBottom: 100 
-    },
+    padding: 15,
+    paddingBottom: 100,
+  },
   card: {
     backgroundColor: "#fff",
     borderRadius: 12,
     padding: 15,
     marginBottom: 15,
+    elevation: 6,
   },
   cardTitle: {
-     fontSize: 16,
-      fontWeight: "bold",
-       color: "#1c5e7aff"
-       },
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#1c5e7aff",
+  },
   cardSubtitle: {
-     fontSize: 14,
-      color: "#000",
-       marginTop: 5 
-      },
-  reminder: { 
-    fontSize: 12, 
-    color: "#504d4dff", 
-    marginTop: 5 
+    fontSize: 14,
+    color: "#000",
+    marginTop: 5,
   },
-  sectionTitle: { 
-    fontSize: 16, 
-  fontWeight: "bold", 
-    color: "#1c5e7aff" 
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#1c5e7aff",
   },
-  title: { 
-    fontSize: 18, 
-  fontWeight: "bold", 
-    color: "#000000ff", 
+  title: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#000000ff",
     justifyContent: "center",
   },
   smallButton: {
@@ -207,20 +333,22 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: "center",
   },
-  smallButtonText: { 
-    color: "#fff", 
-    fontSize: 13, 
-    fontWeight: "bold" 
+  smallButtonText: {
+    color: "#fff",
+    fontSize: 13,
+    fontWeight: "bold",
   },
-  insightsCard: { 
-    backgroundColor: "#fff", 
-    borderRadius: 12, 
-    padding: 15, 
-    marginBottom: 15 },
-  insightItem: { 
-    fontSize: 13, 
-    color: "#333", 
-    marginTop: 5 
+  insightsCard: {
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 15,
+    marginBottom: 15,
+    elevation: 6,
+  },
+  insightItem: {
+    fontSize: 13,
+    color: "#333",
+    marginTop: 5,
   },
   grid: {
     flexDirection: "row",
@@ -243,20 +371,22 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 6,
   },
-  gridText: { fontSize: 14, 
-    color: "#fff", 
-    marginTop: 5, 
-    fontWeight: "500" 
+  gridText: {
+    fontSize: 14,
+    color: "#fff",
+    marginTop: 5,
+    fontWeight: "500",
   },
-  cardHighlight: 
-  { backgroundColor: "#fff",
-     borderRadius: 12,
-      padding: 15,
-      marginBottom: 15 
-    },
-  recoText: { 
-    fontSize: 13, 
-    color: "#333" 
+  cardHighlight: {
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 15,
+    marginBottom: 15,
+    elevation: 6,
+  },
+  recoText: {
+    fontSize: 13,
+    color: "#333",
   },
   footer: {
     position: "absolute",
@@ -270,26 +400,26 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: "#eee",
   },
-  footerText: { 
+  footerText: {
     fontSize: 12,
-     color: "#1c5e7aff",
-      marginTop: 3, 
-      textAlign: "center"
-    },
+    color: "#1c5e7aff",
+    marginTop: 3,
+    textAlign: "center",
+  },
   progressHeader: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     marginBottom: 15,
   },
-  progressSubtitle: { 
+  progressSubtitle: {
     fontSize: 12,
-     color: "#666" 
-    },
-  progressNumber: { 
-    fontSize: 13, 
-    fontWeight: "bold", 
-    color: "#1c5e7aff" 
+    color: "#666",
+  },
+  progressNumber: {
+    fontSize: 13,
+    fontWeight: "bold",
+    color: "#1c5e7aff",
   },
   progressBarContainer: {
     height: 8,
@@ -297,9 +427,27 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: "hidden",
     marginBottom: 12,
+    elevation: 3,
   },
-  progressBarFill: { 
-    height: "100%", 
-    backgroundColor: "#51b3ddff", 
-    borderRadius: 10 },
+  progressBarFill: {
+    height: "100%",
+    backgroundColor: "#51b3ddff",
+    borderRadius: 10,
+  },
+  childChip: {
+    backgroundColor: "#fff",
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    marginRight: 8,
+  },
+  childChipActive: {
+    backgroundColor: "#1c5e7aff",
+    borderColor: "#1c5e7aff",
+  },
+  childChipText: {
+    color: "#000",
+  },
 });

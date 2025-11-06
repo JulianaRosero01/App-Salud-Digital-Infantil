@@ -120,7 +120,7 @@ export default function Welcome() {
       </LinearGradient>
 
       {/* Botón explorar sin registrar */}
-      <TouchableOpacity style={styles.secondaryButton}>
+      <TouchableOpacity style={styles.secondaryButton} onPress={() => router.push("/exploracion")}>
         <Text style={styles.secondaryButtonText}>Explorar Primero Sin Registrar</Text>
       </TouchableOpacity>
 

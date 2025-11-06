@@ -46,14 +46,7 @@ export default function Menu() {
         </TouchableOpacity>
       </View>
 
-      {/* Botón de gestionar niños */}
-      <TouchableOpacity
-        style={[styles.card, styles.fullWidthCard]}
-        onPress={() => router.push("/gestionarNinos")}
-      >
-        <Ionicons name="people-outline" size={40} color="#1c5e7aff" />
-        <Text style={styles.cardText}>Gestionar Niños (1)</Text>
-      </TouchableOpacity>
+      
     </ScrollView>
   );
 }
@@ -98,7 +91,7 @@ const styles = StyleSheet.create({
     
   },
   card: {
-    backgroundColor: "#F2F7FF",
+    backgroundColor: "#ffffffff",
     borderRadius: 15,
     paddingVertical: 25,
     paddingHorizontal: 15,

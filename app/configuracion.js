@@ -1,12 +1,49 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Switch } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  Switch,
+  Alert,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Configuracion() {
   const router = useRouter();
   const [notificaciones, setNotificaciones] = React.useState(true);
   const [modoOscuro, setModoOscuro] = React.useState(false);
+
+  // 👉 función para cerrar sesión
+  const handleLogout = async () => {
+    Alert.alert(
+      "Cerrar sesión",
+      "¿Seguro que deseas cerrar sesión?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Sí, salir",
+          onPress: async () => {
+            try {
+              // eliminamos datos locales
+              await AsyncStorage.removeItem("hasChild");
+              await AsyncStorage.removeItem("children");
+              await AsyncStorage.removeItem("notifications");
+
+              // redirigimos al inicio
+              router.replace("/welcome");
+            } catch (error) {
+              console.log("Error al cerrar sesión:", error);
+            }
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -26,7 +63,11 @@ export default function Configuracion() {
 
           <View style={styles.option}>
             <View style={styles.optionTextContainer}>
-              <Ionicons name="notifications-outline" size={22} color="#1c5e7aff" />
+              <Ionicons
+                name="notifications-outline"
+                size={22}
+                color="#1c5e7aff"
+              />
               <Text style={styles.optionText}>Notificaciones</Text>
             </View>
             <Switch
@@ -67,7 +108,8 @@ export default function Configuracion() {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.logoutButton}>
+        {/* BOTÓN CERRAR SESIÓN */}
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <Ionicons name="log-out-outline" size={20} color="#fff" />
           <Text style={styles.logoutText}>Cerrar sesión</Text>
         </TouchableOpacity>
@@ -89,7 +131,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#eee",
   },
-  
 
   title: {
     fontSize: 18,

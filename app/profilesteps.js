@@ -1,14 +1,21 @@
 import React, { useState } from "react";
-import {  View,  Text,  StyleSheet,  TouchableOpacity,  TextInput,  ScrollView,
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+  ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 
 export default function ProfileSteps() {
   const [step, setStep] = useState(0);
   const [formData, setFormData] = useState({
-    nombre: "",    
+    nombre: "",
     edad: "",
     genero: "",
     intereses: [],
@@ -20,11 +27,51 @@ export default function ProfileSteps() {
 
   const totalSteps = 5;
 
-  const handleNext = () => {
+  const addNotification = async (message) => {
+    try {
+      const existing = await AsyncStorage.getItem("notifications");
+      let list = existing ? JSON.parse(existing) : [];
+      list.unshift({
+        message,
+        date: new Date().toISOString(),
+      });
+      await AsyncStorage.setItem("notifications", JSON.stringify(list));
+    } catch (err) {
+      console.log("Error guardando notificación:", err);
+    }
+  };
+
+  const handleNext = async () => {
     if (step < totalSteps - 1) {
       setStep(step + 1);
     } else {
-      router.push("/home"); // Pantalla final
+      
+      try {
+        // ya hay niño(s)
+        await AsyncStorage.setItem("hasChild", "true");
+
+        //  ya había
+        const existing = await AsyncStorage.getItem("children");
+        let children = [];
+        if (existing) {
+          children = JSON.parse(existing);
+        }
+
+        // nuevo niño
+        children.push(formData);
+
+        //  lista
+        await AsyncStorage.setItem("children", JSON.stringify(children));
+
+        // agregamos notificación
+        await addNotification(
+          `Se registró el niño/a ${formData.nombre || "sin nombre"}`
+        );
+      } catch (error) {
+        console.log("Error guardando datos del niño:", error);
+      }
+
+      router.replace("/home");
     }
   };
 
@@ -139,28 +186,33 @@ export default function ProfileSteps() {
             <Text style={styles.subtitle}>
               Selecciona sus intereses favoritos
             </Text>
-            {["Música", "Libros", "Juegos", "Socializar", "Arte", "Deportes"].map(
-              (item) => (
-                <TouchableOpacity
-                  key={item}
-                  style={[
-                    styles.option,
-                    formData.intereses.includes(item) && styles.optionSelected,
-                  ]}
-                  onPress={() => {
-                    const intereses = [...formData.intereses];
-                    if (intereses.includes(item)) {
-                      intereses.splice(intereses.indexOf(item), 1);
-                    } else {
-                      intereses.push(item);
-                    }
-                    setFormData({ ...formData, intereses });
-                  }}
-                >
-                  <Text style={styles.optionText}>{item}</Text>
-                </TouchableOpacity>
-              )
-            )}
+            {[
+              "Música",
+              "Libros",
+              "Juegos",
+              "Socializar",
+              "Arte",
+              "Deportes",
+            ].map((item) => (
+              <TouchableOpacity
+                key={item}
+                style={[
+                  styles.option,
+                  formData.intereses.includes(item) && styles.optionSelected,
+                ]}
+                onPress={() => {
+                  const intereses = [...formData.intereses];
+                  if (intereses.includes(item)) {
+                    intereses.splice(intereses.indexOf(item), 1);
+                  } else {
+                    intereses.push(item);
+                  }
+                  setFormData({ ...formData, intereses });
+                }}
+              >
+                <Text style={styles.optionText}>{item}</Text>
+              </TouchableOpacity>
+            ))}
           </View>
         );
 
@@ -171,28 +223,32 @@ export default function ProfileSteps() {
             <Text style={styles.subtitle}>
               Elige las áreas de desarrollo más importantes
             </Text>
-            {["Alimentación", "Sueño", "Social", "Aprendizaje", "Motricidad"].map(
-              (item) => (
-                <TouchableOpacity
-                  key={item}
-                  style={[
-                    styles.option,
-                    formData.enfoque.includes(item) && styles.optionSelected,
-                  ]}
-                  onPress={() => {
-                    const enfoque = [...formData.enfoque];
-                    if (enfoque.includes(item)) {
-                      enfoque.splice(enfoque.indexOf(item), 1);
-                    } else {
-                      enfoque.push(item);
-                    }
-                    setFormData({ ...formData, enfoque });
-                  }}
-                >
-                  <Text style={styles.optionText}>{item}</Text>
-                </TouchableOpacity>
-              )
-            )}
+            {[
+              "Alimentación",
+              "Sueño",
+              "Social",
+              "Aprendizaje",
+              "Motricidad",
+            ].map((item) => (
+              <TouchableOpacity
+                key={item}
+                style={[
+                  styles.option,
+                  formData.enfoque.includes(item) && styles.optionSelected,
+                ]}
+                onPress={() => {
+                  const enfoque = [...formData.enfoque];
+                  if (enfoque.includes(item)) {
+                    enfoque.splice(enfoque.indexOf(item), 1);
+                  } else {
+                    enfoque.push(item);
+                  }
+                  setFormData({ ...formData, enfoque });
+                }}
+              >
+                <Text style={styles.optionText}>{item}</Text>
+              </TouchableOpacity>
+            ))}
           </View>
         );
 
@@ -234,10 +290,10 @@ export default function ProfileSteps() {
               {formData.nombre}.
             </Text>
             <Ionicons
+              style={styles.final}
               name="checkmark-circle-outline"
-              size={60}
-              color="#4CAF50"
-              style={{ marginVertical: 20 }}
+              size={80}
+              color="#71bb74ff"
             />
           </View>
         );
@@ -249,6 +305,13 @@ export default function ProfileSteps() {
 
   return (
     <LinearGradient colors={["#F6FBFF", "#EAF3FF"]} style={{ flex: 1 }}>
+      {/* HEADER */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => router.back()}>
+          <Ionicons name="arrow-back-outline" size={26} color="#1c5e7aff" />
+        </TouchableOpacity>
+      </View>
+
       <ScrollView contentContainerStyle={styles.container}>
         {/* Barra de progreso */}
         <View style={styles.progressBar}>
@@ -273,6 +336,9 @@ export default function ProfileSteps() {
             </View>
           ))}
         </View>
+        <Text style={styles.stepText}>
+          Paso {step + 1} de {totalSteps}
+        </Text>
 
         {/* Paso actual */}
         {renderStep()}
@@ -295,10 +361,7 @@ export default function ProfileSteps() {
               <Text style={styles.nextText}>Siguiente</Text>
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity
-              style={styles.finishButton}
-              onPress={handleNext}
-            >
+            <TouchableOpacity style={styles.finishButton} onPress={handleNext}>
               <Text style={styles.finishText}>Finalizar</Text>
             </TouchableOpacity>
           )}
@@ -313,6 +376,16 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: "center",
   },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 15,
+    paddingTop: 50,
+    backgroundColor: "transparent",
+    zIndex: 10,
+    marginBottom: -40,
+  },
+
   card: {
     backgroundColor: "#fff",
     borderRadius: 15,
@@ -324,6 +397,7 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 3,
   },
+
   title: {
     fontSize: 18,
     fontWeight: "bold",
@@ -465,5 +539,13 @@ const styles = StyleSheet.create({
   finishText: {
     color: "#fff",
     fontWeight: "bold",
+  },
+  final: {
+    marginLeft: 130,
+  },
+  stepText: {
+    fontSize: 14,
+    color: "#444",
+    marginBottom: 5,
   },
 });

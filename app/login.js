@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+/*import React, { useState } from 'react';
 import {  View,  Text,  TextInput,  TouchableOpacity,  Alert,  Image,  StyleSheet,  KeyboardAvoidingView,  Platform,  ScrollView,} from 'react-native';
 import { router } from 'expo-router';
 
@@ -152,3 +152,4 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
+*/
