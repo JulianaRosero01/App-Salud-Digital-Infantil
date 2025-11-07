@@ -5,7 +5,7 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 
 export default function Home() {
   const router = useRouter();
-  const { nombre } = useLocalSearchParams(); // simula el nombre del niño que llega
+  const { nombre } = useLocalSearchParams(); 
 
   return (
     <View style={styles.container}>

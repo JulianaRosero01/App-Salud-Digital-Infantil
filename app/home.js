@@ -1,4 +1,3 @@
-// app/home.js
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -14,7 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Home() {
   const router = useRouter();
-  const { nombre } = useLocalSearchParams(); // por si vienes con ?nombre=...
+  const { nombre } = useLocalSearchParams(); 
   const [children, setChildren] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [activeChild, setActiveChild] = useState(null);
@@ -47,7 +46,7 @@ export default function Home() {
     if (!activeChild) return true; // si no hay niño, muestra todo
     const enfoque = activeChild.enfoque || [];
     if (enfoque.length === 0) return true; // si no eligió nada, muestra todo
-    // nombres según lo que guardaste en profilesteps
+    // nombres según lo guardado en profilesteps
     return enfoque.includes(areaName);
   };
 
