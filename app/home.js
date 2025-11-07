@@ -85,7 +85,7 @@ export default function Home() {
       {!loading && children.length > 0 && (
         <ScrollView
           horizontal
-          style={{ paddingHorizontal: 15, marginTop: 10 }}
+          style={{ paddingHorizontal: 23, marginTop: 15, marginBottom:9, }}
           showsHorizontalScrollIndicator={false}
         >
           {children.map((c, i) => (
