@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+// app/profileSteps.js  (reemplaza tu archivo actual por este)
+import React, { useState, useMemo } from "react";
 import {
   View,
   Text,
@@ -6,6 +7,7 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
@@ -18,14 +20,24 @@ export default function ProfileSteps() {
     nombre: "",
     edad: "",
     genero: "",
-    intereses: [],
-    enfoque: [],
-    dieta: "",
+    intereses: [], // para motricidad / gustos
+    enfoque: [], // áreas seleccionadas por el cuidador
+    dieta: "", // solo si eligió Alimentación
   });
 
   const router = useRouter();
 
-  const totalSteps = 5;
+  // SECUENCIA LÓGICA: siempre 'info' y 'enfoque', luego condicional 'intereses' (si seleccionó Motricidad),
+  // luego condicional 'dieta' (si seleccionó Alimentación), y finalmente 'final'.
+  const sequence = useMemo(() => {
+    const seq = ["info", "enfoque"];
+    if (formData.enfoque.includes("Motricidad")) seq.push("intereses");
+    if (formData.enfoque.includes("Alimentación")) seq.push("dieta");
+    seq.push("final");
+    return seq;
+  }, [formData.enfoque]);
+
+  const totalSteps = sequence.length;
 
   const addNotification = async (message) => {
     try {
@@ -41,37 +53,31 @@ export default function ProfileSteps() {
     }
   };
 
-  const handleNext = async () => {
+  // Guardar el niño al finalizar
+  const saveChildAndFinish = async () => {
+    try {
+      await AsyncStorage.setItem("hasChild", "true");
+      const existing = await AsyncStorage.getItem("children");
+      let children = existing ? JSON.parse(existing) : [];
+
+      // push nuevo niño
+      children.push(formData);
+      await AsyncStorage.setItem("children", JSON.stringify(children));
+
+      await addNotification(`Se registró el niño/a ${formData.nombre || "sin nombre"}`);
+      router.replace("/home");
+    } catch (error) {
+      console.log("Error guardando datos del niño:", error);
+      Alert.alert("Error", "No se pudieron guardar los datos. Intenta de nuevo.");
+    }
+  };
+
+  // NEXT / BACK (navegación entre pasos)
+  const handleNext = () => {
     if (step < totalSteps - 1) {
       setStep(step + 1);
     } else {
-      
-      try {
-        // ya hay niño(s)
-        await AsyncStorage.setItem("hasChild", "true");
-
-        //  ya había
-        const existing = await AsyncStorage.getItem("children");
-        let children = [];
-        if (existing) {
-          children = JSON.parse(existing);
-        }
-
-        // nuevo niño
-        children.push(formData);
-
-        //  lista
-        await AsyncStorage.setItem("children", JSON.stringify(children));
-
-        // agregamos notificación
-        await addNotification(
-          `Se registró el niño/a ${formData.nombre || "sin nombre"}`
-        );
-      } catch (error) {
-        console.log("Error guardando datos del niño:", error);
-      }
-
-      router.replace("/home");
+      saveChildAndFinish();
     }
   };
 
@@ -79,50 +85,81 @@ export default function ProfileSteps() {
     if (step > 0) setStep(step - 1);
   };
 
-  // Validación por pasos
+  // Validación según paso lógico actual (miramos sequence[step])
   const isStepValid = () => {
-    switch (step) {
-      case 0:
+    const key = sequence[step];
+    switch (key) {
+      case "info":
         return formData.nombre && formData.edad && formData.genero;
-      case 1:
-        return formData.intereses.length > 0;
-      case 2:
+      case "enfoque":
         return formData.enfoque.length > 0;
-      case 3:
+      case "intereses":
+        return formData.intereses.length > 0;
+      case "dieta":
         return formData.dieta !== "";
       default:
         return true;
     }
   };
 
-  // Render de pasos
+  // Helpers para toggles
+  const toggleArrayField = (fieldName, value) => {
+    const arr = [...(formData[fieldName] || [])];
+    if (arr.includes(value)) {
+      arr.splice(arr.indexOf(value), 1);
+    } else {
+      arr.push(value);
+    }
+
+    // Si se está desmarcando 'Motricidad' o 'Alimentación', limpiamos datos relacionados
+    const newData = { ...formData, [fieldName]: arr };
+
+    if (fieldName === "enfoque") {
+      // si se quitó Motricidad -> limpiar intereses
+      if (!arr.includes("Motricidad") && formData.intereses.length > 0) {
+        newData.intereses = [];
+      }
+      // si se quitó Alimentación -> limpiar dieta
+      if (!arr.includes("Alimentación") && formData.dieta) {
+        newData.dieta = "";
+      }
+      // if we removed enfoques and current step is now beyond new sequence, adjust step
+      setFormData(newData);
+      // recompute sequence happens automatically via useMemo; ensure step not out-of-range
+      setTimeout(() => {
+        const newSeqLen = (["info", "enfoque"]
+          .concat(arr.includes("Motricidad") ? ["intereses"] : [])
+          .concat(arr.includes("Alimentación") ? ["dieta"] : [])
+          .concat(["final"])).length;
+        if (step >= newSeqLen) setStep(newSeqLen - 1);
+      }, 0);
+    } else {
+      setFormData(newData);
+    }
+  };
+
+  // Render de los pasos según la clave lógica
   const renderStep = () => {
-    switch (step) {
-      case 0:
+    const key = sequence[step];
+    switch (key) {
+      case "info":
         return (
           <View style={styles.card}>
             <Text style={styles.title}>¡Conoce a tu pequeño!</Text>
-            <Text style={styles.subtitle}>
-              Cuéntanos sobre tu hijo para personalizar su experiencia
-            </Text>
+            <Text style={styles.subtitle}>Cuéntanos sobre tu hijo para personalizar su experiencia</Text>
 
             <Text style={styles.label}>¿Cómo se llama?</Text>
             <TextInput
               style={styles.input}
               placeholder="Escribe su nombre"
               value={formData.nombre}
-              onChangeText={(text) =>
-                setFormData({ ...formData, nombre: text })
-              }
+              onChangeText={(text) => setFormData({ ...formData, nombre: text })}
             />
 
             <Text style={styles.label}>¿Qué edad tiene?</Text>
             <View>
               <TouchableOpacity
-                style={[
-                  styles.option,
-                  formData.edad === "0-2" && styles.optionSelected,
-                ]}
+                style={[styles.option, formData.edad === "0-2" && styles.optionSelected]}
                 onPress={() => setFormData({ ...formData, edad: "0-2" })}
               >
                 <Ionicons name="baby-outline" size={20} color="#51b3ddff" />
@@ -130,10 +167,7 @@ export default function ProfileSteps() {
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={[
-                  styles.option,
-                  formData.edad === "3-5" && styles.optionSelected,
-                ]}
+                style={[styles.option, formData.edad === "3-5" && styles.optionSelected]}
                 onPress={() => setFormData({ ...formData, edad: "3-5" })}
               >
                 <Ionicons name="heart-outline" size={20} color="#51b3ddff" />
@@ -141,10 +175,7 @@ export default function ProfileSteps() {
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={[
-                  styles.option,
-                  formData.edad === "6-8" && styles.optionSelected,
-                ]}
+                style={[styles.option, formData.edad === "6-8" && styles.optionSelected]}
                 onPress={() => setFormData({ ...formData, edad: "6-8" })}
               >
                 <Ionicons name="school-outline" size={20} color="#51b3ddff" />
@@ -157,72 +188,22 @@ export default function ProfileSteps() {
               {["niño", "niña", "prefiero no decir"].map((g) => (
                 <TouchableOpacity
                   key={g}
-                  style={[
-                    styles.genderButton,
-                    formData.genero === g && styles.genderSelected,
-                  ]}
+                  style={[styles.genderButton, formData.genero === g && styles.genderSelected]}
                   onPress={() => setFormData({ ...formData, genero: g })}
                 >
-                  <Text
-                    style={[
-                      styles.genderText,
-                      formData.genero === g && { color: "#fff" },
-                    ]}
-                  >
-                    {g}
-                  </Text>
+                  <Text style={[styles.genderText, formData.genero === g && { color: "#fff" }]}>{g}</Text>
                 </TouchableOpacity>
               ))}
             </View>
           </View>
         );
 
-      case 1:
-        return (
-          <View style={styles.card}>
-            <Text style={styles.title}>
-              ¿Qué le gusta a {formData.nombre}?
-            </Text>
-            <Text style={styles.subtitle}>
-              Selecciona sus intereses favoritos
-            </Text>
-            {[
-              "Música",
-              "Libros",
-              "Juegos",
-              "Socializar",
-              "Arte",
-              "Deportes",
-            ].map((item) => (
-              <TouchableOpacity
-                key={item}
-                style={[
-                  styles.option,
-                  formData.intereses.includes(item) && styles.optionSelected,
-                ]}
-                onPress={() => {
-                  const intereses = [...formData.intereses];
-                  if (intereses.includes(item)) {
-                    intereses.splice(intereses.indexOf(item), 1);
-                  } else {
-                    intereses.push(item);
-                  }
-                  setFormData({ ...formData, intereses });
-                }}
-              >
-                <Text style={styles.optionText}>{item}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        );
-
-      case 2:
+      case "enfoque":
         return (
           <View style={styles.card}>
             <Text style={styles.title}>¿En qué quieres enfocarte?</Text>
-            <Text style={styles.subtitle}>
-              Elige las áreas de desarrollo más importantes
-            </Text>
+            <Text style={styles.subtitle}>Elige las áreas de desarrollo más importantes</Text>
+
             {[
               "Sueño",
               "Social",
@@ -233,74 +214,95 @@ export default function ProfileSteps() {
             ].map((item) => (
               <TouchableOpacity
                 key={item}
-                style={[
-                  styles.option,
-                  formData.enfoque.includes(item) && styles.optionSelected,
-                ]}
-                onPress={() => {
-                  const enfoque = [...formData.enfoque];
-                  if (enfoque.includes(item)) {
-                    enfoque.splice(enfoque.indexOf(item), 1);
-                  } else {
-                    enfoque.push(item);
-                  }
-                  setFormData({ ...formData, enfoque });
-                }}
+                style={[styles.option, formData.enfoque.includes(item) && styles.optionSelected]}
+                onPress={() => toggleArrayField("enfoque", item)}
               >
                 <Text style={styles.optionText}>{item}</Text>
               </TouchableOpacity>
             ))}
+
+            <Text style={{ marginTop: 8, color: "#555" }}>
+              Nota: según lo que elijas, te preguntaremos cosas específicas (por ejemplo, intereses si eliges Motricidad).
+            </Text>
           </View>
         );
 
-      case 3:
+      case "intereses": // aparece solo si seleccionó Motricidad
+        return (
+          <View style={styles.card}>
+            <Text style={styles.title}>¿Qué le gusta a {formData.nombre || "el niño"}?</Text>
+            <Text style={styles.subtitle}>Selecciona sus intereses (esto guía actividades motrices)</Text>
+
+            {["Jugar", "Socializar", "Leer", "Deportes", "Música", "Arte"].map((item) => (
+              <TouchableOpacity
+                key={item}
+                style={[styles.option, formData.intereses.includes(item) && styles.optionSelected]}
+                onPress={() => toggleArrayField("intereses", item)}
+              >
+                <Text style={styles.optionText}>{item}</Text>
+              </TouchableOpacity>
+            ))}
+
+            <Text style={{ marginTop: 8, color: "#555" }}>
+              Estos intereses se usan para priorizar actividades en la sección Motricidad.
+            </Text>
+          </View>
+        );
+
+      case "dieta": // aparece solo si seleccionó Alimentación
         return (
           <View style={styles.card}>
             <Text style={styles.title}>Preferencias Alimentarias</Text>
-            <Text style={styles.subtitle}>
-              Selecciona el tipo de dieta que sigue {formData.nombre}
+            <Text style={styles.subtitle}>Selecciona el tipo de dieta que sigue {formData.nombre || "el niño"}</Text>
+
+            {["Estándar", "Vegetariana", "Vegana", "Sin gluten", "Sin lácteos", "Alergias específicas"].map(
+              (item) => (
+                <TouchableOpacity
+                  key={item}
+                  style={[styles.option, formData.dieta === item && styles.optionSelected]}
+                  onPress={() => setFormData({ ...formData, dieta: item })}
+                >
+                  <Text style={styles.optionText}>{item}</Text>
+                </TouchableOpacity>
+              )
+            )}
+
+            <Text style={{ marginTop: 8, color: "#555" }}>
+              Nota: si más adelante decides no enfocar en Alimentación, esta información no será obligatoria.
             </Text>
-            {[
-              "Estándar",
-              "Vegetariana",
-              "Vegana",
-              "Sin gluten",
-              "Sin lácteos",
-              "Alergias específicas",
-            ].map((item) => (
-              <TouchableOpacity
-                key={item}
-                style={[
-                  styles.option,
-                  formData.dieta === item && styles.optionSelected,
-                ]}
-                onPress={() => setFormData({ ...formData, dieta: item })}
-              >
-                <Text style={styles.optionText}>{item}</Text>
-              </TouchableOpacity>
-            ))}
           </View>
         );
 
-      case 4:
+      case "final":
         return (
           <View style={styles.card}>
             <Text style={styles.title}>¡Perfil creado con éxito!</Text>
-            <Text style={styles.subtitle}>
-              Ya puedes comenzar a explorar contenido personalizado para{" "}
-              {formData.nombre}.
-            </Text>
-            <Ionicons
-              style={styles.final}
-              name="checkmark-circle-outline"
-              size={80}
-              color="#71bb74ff"
-            />
+            <Text style={styles.subtitle}>Ya puedes comenzar a explorar contenido personalizado para {formData.nombre}.</Text>
+            <Ionicons style={styles.final} name="checkmark-circle-outline" size={80} color="#71bb74ff" />
           </View>
         );
 
       default:
         return null;
+    }
+  };
+
+  // Para mostrar un label del paso actual entendible (opcional)
+  const stepLabel = () => {
+    const key = sequence[step];
+    switch (key) {
+      case "info":
+        return "Datos del niño";
+      case "enfoque":
+        return "Áreas de enfoque";
+      case "intereses":
+        return "Intereses (motricidad)";
+      case "dieta":
+        return "Preferencias alimentarias";
+      case "final":
+        return "Finalizar";
+      default:
+        return "";
     }
   };
 
@@ -311,37 +313,27 @@ export default function ProfileSteps() {
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="arrow-back-outline" size={26} color="#1c5e7aff" />
         </TouchableOpacity>
+        <Text style={{ fontWeight: "700", color: "#1c5e7aff" }}>{stepLabel()}</Text>
+        <View style={{ width: 26 }} />
       </View>
 
       <ScrollView contentContainerStyle={styles.container}>
-        {/* Barra de progreso */}
+        {/* Barra de progreso dinámica */}
         <View style={styles.progressBar}>
           {[...Array(totalSteps)].map((_, i) => (
             <View key={i} style={styles.progressStep}>
-              <View
-                style={[
-                  styles.circle,
-                  i <= step ? styles.circleActive : styles.circleInactive,
-                ]}
-              >
+              <View style={[styles.circle, i <= step ? styles.circleActive : styles.circleInactive]}>
                 <Text style={styles.circleText}>{i + 1}</Text>
               </View>
               {i < totalSteps - 1 && (
-                <View
-                  style={[
-                    styles.line,
-                    i < step ? styles.lineActive : styles.lineInactive,
-                  ]}
-                />
+                <View style={[styles.line, i < step ? styles.lineActive : styles.lineInactive]} />
               )}
             </View>
           ))}
         </View>
-        <Text style={styles.stepText}>
-          Paso {step + 1} de {totalSteps}
-        </Text>
+        <Text style={styles.stepText}>Paso {step + 1} de {totalSteps}</Text>
 
-        {/* Paso actual */}
+        {/* Paso actual (render dinámico) */}
         {renderStep()}
 
         {/* Botones navegación */}
@@ -351,18 +343,16 @@ export default function ProfileSteps() {
               <Text style={styles.backText}>Anterior</Text>
             </TouchableOpacity>
           )}
+
           {step < totalSteps - 1 ? (
             <TouchableOpacity
-              style={[
-                styles.nextButton,
-                !isStepValid() && { backgroundColor: "#ccc" },
-              ]}
+              style={[styles.nextButton, !isStepValid() && { backgroundColor: "#ccc" }]}
               onPress={isStepValid() ? handleNext : null}
             >
               <Text style={styles.nextText}>Siguiente</Text>
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity style={styles.finishButton} onPress={handleNext}>
+            <TouchableOpacity style={styles.finishButton} onPress={isStepValid() ? handleNext : null}>
               <Text style={styles.finishText}>Finalizar</Text>
             </TouchableOpacity>
           )}
@@ -385,6 +375,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     zIndex: 10,
     marginBottom: -40,
+    justifyContent: "space-between",
   },
 
   card: {

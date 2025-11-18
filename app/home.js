@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+// app/home.js
+import React, { useEffect, useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -10,6 +11,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function Home() {
   const router = useRouter();
@@ -21,27 +23,36 @@ export default function Home() {
 
   const TOTAL_ACTIVITIES = 30; // puedes cambiarlo
 
-  // cargar niños y niño activo
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const json = await AsyncStorage.getItem("children");
-        const savedIndex = await AsyncStorage.getItem("activeChildIndex");
+  // carga reutilizable (la usamos en mount y en focus)
+  const loadData = useCallback(async () => {
+    try {
+      const json = await AsyncStorage.getItem("children");
+      const savedIndex = await AsyncStorage.getItem("activeChildIndex");
 
-        const list = json ? JSON.parse(json) : [];
-        setChildren(list);
+      const list = json ? JSON.parse(json) : [];
+      setChildren(list);
 
-        const idx = savedIndex ? Number(savedIndex) : 0;
-        setActiveIndex(idx);
-        setActiveChild(list[idx] || null);
-      } catch (error) {
-        console.log("Error cargando home:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
+      const idx = savedIndex ? Number(savedIndex) : 0;
+      setActiveIndex(idx);
+      setActiveChild(list[idx] || null);
+    } catch (error) {
+      console.log("Error cargando home:", error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  // carga inicial
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  // recarga cada vez que regresas a Home (importante para ver los cambios hechos en otras pantallas)
+  useFocusEffect(
+    useCallback(() => {
+      loadData();
+    }, [loadData])
+  );
 
   // para decidir si mostramos un área según lo que marcó en "enfoque"
   const hasFocus = (areaName) => {
@@ -104,9 +115,14 @@ export default function Home() {
                 i === activeIndex && styles.childChipActive,
               ]}
               onPress={async () => {
+                // actualizamos UI y persistimos la selección
                 setActiveIndex(i);
                 setActiveChild(children[i]);
-                await AsyncStorage.setItem("activeChildIndex", String(i));
+                try {
+                  await AsyncStorage.setItem("activeChildIndex", String(i));
+                } catch (err) {
+                  console.log("Error guardando activeChildIndex:", err);
+                }
               }}
             >
               <Text
