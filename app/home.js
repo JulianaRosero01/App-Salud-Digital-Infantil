@@ -13,11 +13,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Home() {
   const router = useRouter();
-  const { nombre } = useLocalSearchParams(); 
+  const { nombre } = useLocalSearchParams();
   const [children, setChildren] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [activeChild, setActiveChild] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const TOTAL_ACTIVITIES = 30; // puedes cambiarlo
 
   // cargar niños y niño activo
   useEffect(() => {
@@ -43,14 +45,13 @@ export default function Home() {
 
   // para decidir si mostramos un área según lo que marcó en "enfoque"
   const hasFocus = (areaName) => {
-    if (!activeChild) return true; // si no hay niño, muestra todo
+    if (!activeChild) return true;
     const enfoque = activeChild.enfoque || [];
-    if (enfoque.length === 0) return true; // si no eligió nada, muestra todo
-    // nombres según lo guardado en profilesteps
+    if (enfoque.length === 0) return true;
     return enfoque.includes(areaName);
   };
 
-  // para mostrar texto de insights según edad
+  // texto por edad
   const getEdadTexto = () => {
     if (!activeChild || !activeChild.edad) return "su edad";
     if (activeChild.edad === "0-2") return "0-2 años";
@@ -61,6 +62,13 @@ export default function Home() {
 
   const nombreMostrado =
     (activeChild && activeChild.nombre) || nombre || "tu niño";
+
+  // progreso del niño activo
+  const completed = activeChild?.completedActivities || 0;
+  const percent =
+    completed >= TOTAL_ACTIVITIES
+      ? 100
+      : Math.round((completed / TOTAL_ACTIVITIES) * 100);
 
   return (
     <View style={styles.container}>
@@ -81,11 +89,11 @@ export default function Home() {
         </TouchableOpacity>
       </View>
 
-      {/* SELECTOR DE NIÑOS (si hay más de 1) */}
+      {/* SELECTOR DE NIÑOS */}
       {!loading && children.length > 0 && (
         <ScrollView
           horizontal
-          style={{ paddingHorizontal: 23, marginTop: 15, marginBottom:9, }}
+          style={{ paddingHorizontal: 23, marginTop: 15, marginBottom: 9 }}
           showsHorizontalScrollIndicator={false}
         >
           {children.map((c, i) => (
@@ -136,14 +144,24 @@ export default function Home() {
                 Actividades completadas
               </Text>
             </View>
-            <Text style={styles.progressNumber}>0/30</Text>
+            <Text style={styles.progressNumber}>
+              {completed}/{TOTAL_ACTIVITIES}
+            </Text>
           </View>
 
           <View style={styles.progressBarContainer}>
-            <View style={[styles.progressBarFill, { width: "0%" }]} />
+            <View
+              style={[
+                styles.progressBarFill,
+                { width: `${percent}%` }, // 👈 ahora sí cambia
+              ]}
+            />
           </View>
 
-          <TouchableOpacity style={styles.smallButton}>
+          <TouchableOpacity
+            style={styles.smallButton}
+            onPress={() => router.push("/areas/sueno")}
+          >
             <Text style={styles.smallButtonText}>
               ¡Comienza la primera actividad!
             </Text>
@@ -166,7 +184,7 @@ export default function Home() {
           </Text>
         </View>
 
-        {/* Áreas prioritarias filtradas por enfoque */}
+        {/* Áreas filtradas */}
         <View style={styles.grid}>
           {hasFocus("Sueño") && (
             <TouchableOpacity
@@ -218,7 +236,6 @@ export default function Home() {
             </TouchableOpacity>
           )}
 
-          {/* esta no estaba en el registro, la dejamos siempre */}
           <TouchableOpacity
             style={styles.gridItem}
             onPress={() => router.push("/areas/dispositivos")}

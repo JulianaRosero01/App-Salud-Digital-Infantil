@@ -111,17 +111,7 @@ export default function Configuracion() {
             />
           </View>
 
-          <View style={styles.option}>
-            <View style={styles.optionTextContainer}>
-              <Ionicons name="moon-outline" size={22} color="#1c5e7aff" />
-              <Text style={styles.optionText}>Modo oscuro</Text>
-            </View>
-            <Switch
-              value={modoOscuro}
-              onValueChange={setModoOscuro}
-              trackColor={{ true: "#51b3ddff", false: "#ccc" }}
-            />
-          </View>
+         
         </View>
 
         {/* CUENTA / DATOS LOCALES */}

@@ -224,11 +224,12 @@ export default function ProfileSteps() {
               Elige las áreas de desarrollo más importantes
             </Text>
             {[
-              "Alimentación",
               "Sueño",
               "Social",
+              "Alimentación",
               "Aprendizaje",
               "Motricidad",
+              "Dispositivos",
             ].map((item) => (
               <TouchableOpacity
                 key={item}
